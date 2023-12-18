@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="pt-br">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="shortcut icon" href="/img/logo-icon.png" type="image/x-icon">
+	<title>Junin Viagens - Pacotes</title>
+	<link rel="stylesheet" href="/css/style.css">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+</head>
+
+<body>
+	<header>
+		<nav class="navbar navbar-expand-lg text-white" style="background: rgb(12,6,54);
+        background:linear-gradient(90deg, rgba(12,6,54,1) 34%, rgba(9,81,105,1) 81%, rgba(5,155,154,1) 100%);">
+			<a class="navbar-brand text-white" href="/">
+				<img src="/img/logo-icon.png" alt="logo" width="45" height="40" class="d-inline-block align-text-top">
+				Junin Viagens |
+			</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+				aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<div class="collapse navbar-collapse" id="navbarNav">
+					<ul class="navbar-nav">
+						<li class="nav-item active">
+							<a class="nav-link text-white" href="/">Home <span class="sr-only"></span></a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link text-white" href="/clientes">Listar Clientes</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link text-white" href="/pacotes">Listar Pacotes</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link text-white" href="/reservas">Listar Reserva de Viagem</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</header>
+
+	<h2>Listagem de Pacotes</h2>
+
+	<div class="container">
+		<table border="1">
+			<thead>
+				<a href="/pacotes/novo" class="btn btn-primary">Novo Pacote</a>
+				<tr>
+					<th>ID</th>
+					<th>Valor</th>
+					<th>Diárias</th>
+					<th>Destino</th>
+					<th>Cliente</th>
+					<th>Ações</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="pacote : ${pacotes}">
+					<td th:text="${pacote.id}"></td>
+					<td th:text="${pacote.valor}"></td>
+					<td th:text="${pacote.diarias}"></td>
+					<td th:text="${pacote.destino}"></td>
+					<td th:text="${pacote.cliente.nomeCliente}"></td>
+					<td>
+						<a th:href="@{/pacotes/editar/{id}(id=${pacote.id})}" class="btn btn-warning">Editar</a>
+						<a href="#" th:onclick="'deletarPacote(' + ${pacote.id} + ')'" class="btn btn-danger">Deletar</a>
+
+
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<script>
+		// Função para exibir um alerta
+		function mostrarAlerta(mensagem) {
+			alert(mensagem);
+		}
+
+		// Função para deletar o pacote
+		function deletarPacote(id) {
+			fetch(`/pacotes/deletar/${id}`)
+				.then(response => {
+					if (response.ok) {
+						return response.text();
+					} else {
+						return response.text().then(errorMessage => {
+							throw new Error(errorMessage);
+						});
+					}
+				})
+				.then(data => {
+					// Exibição de alerta para sucesso
+					mostrarAlerta(data);
+				})
+				.catch(error => {
+					// Exibição de alerta para erro
+					mostrarAlerta(error.message);
+				});
+		}
+	</script>
+</body>
+
+</html>
